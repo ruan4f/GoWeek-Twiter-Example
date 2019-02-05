@@ -1,7 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://ruan:rf123456@ds123465.mlab.com:23465/goweek-ruan');
+mongoose.connect(
+    'mongodb://ruan:rf123456@ds123465.mlab.com:23465/goweek-ruan', 
+    {
+        useNewUrlParser: true
+    }
+);
 
 const app = express();
 
