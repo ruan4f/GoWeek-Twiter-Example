@@ -1,11 +1,56 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { 
+  KeyboardAvoidingView, 
+  Text, 
+  View, 
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet,
+  AsyncStorage
+} from 'react-native'
+
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class Login extends Component {
+  state = {
+    username: '',
+  };
+
+  handleLogin = async () => {
+    const {username} = this.state;
+
+    if(!username.length) return;
+
+    await AsyncStorage.setItem('@OmniStack:username', username);
+
+    this.props.navigation.navigate('Timeline');
+  }
+
+  handleInputChange = (username) => {
+    this.setState({ username });
+  }; 
+
   render() {
     return (
-      <View style={styles.container}>
-      </View>
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+        <View style={styles.content}>
+          <View>
+            <Icon name="twitter" size={64} color="#4BB0EE" />
+          </View>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Nome de usuário"
+            value={this.state.username}
+            onChangeText={this.handleInputChange}
+            onSubmitEditing={this.handleLogin}
+            returnKeyType="send" />
+
+          <TouchableOpacity onPress={this.handleLogin} style={styles.button}>
+            <Text style={styles.buttonText}>Entrar</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -49,4 +94,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   }
 });
+
+
 
