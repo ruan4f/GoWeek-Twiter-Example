@@ -12,9 +12,18 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class Login extends Component {
+
   state = {
     username: '',
   };
+
+  async componentDidMount() {
+    const username = await AsyncStorage.getItem('@OmniStack:username');
+
+    if (username){
+      this.props.navigation.navigate('App');
+    }
+  }
 
   handleLogin = async () => {
     const {username} = this.state;
@@ -23,7 +32,7 @@ export default class Login extends Component {
 
     await AsyncStorage.setItem('@OmniStack:username', username);
 
-    this.props.navigation.navigate('Timeline');
+    this.props.navigation.navigate('App');
   }
 
   handleInputChange = (username) => {
