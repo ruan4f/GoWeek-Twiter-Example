@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import api from '../services/api';
-
+import socket from 'socket.io-client';
 
 import {
   View,
@@ -14,10 +14,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Tweet from '../components/Tweet';
 
 export default class Timeline extends Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
     title: 'Início',
     headerRight: (
-      <TouchableOpacity onPress={() => { }}>
+      <TouchableOpacity onPress={() => navigation.navigate('New')}>
         <Icon
           style={{ marginRight: 20 }}
           name="add-circle-outline"
@@ -26,17 +26,32 @@ export default class Timeline extends Component {
         />
       </TouchableOpacity>
     ),
-  };
+  });
 
   state = {
     tweets: [],
   }
 
   async componentDidMount() {
+    this.subscribeToEvents();
     const response = await api.get('tweets');
 
     this.setState({ tweets: response.data });
   }
+
+  subscribeToEvents = () => {
+    const io = socket('http://localhost:3000');
+
+    io.on('tweet', data => {
+        this.setState({ tweets: [data, ...this.state.tweets] });
+    });
+
+    io.on('like', data => {
+        this.setState({ tweets: this.state.tweets.map(tweet => 
+            tweet._id === data._id ? data : tweet
+        )});
+    });
+}
 
   render() {
     return (
