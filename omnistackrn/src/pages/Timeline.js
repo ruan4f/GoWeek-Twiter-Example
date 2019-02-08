@@ -5,11 +5,13 @@ import api from '../services/api';
 import {
   View,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import Tweet from '../components/Tweet';
 
 export default class Timeline extends Component {
   static navigationOptions = {
@@ -39,7 +41,11 @@ export default class Timeline extends Component {
   render() {
     return (
       <View style={styles.container}>
-        
+        <FlatList
+          data={this.state.tweets}
+          keyExtractor={tweet => tweet._id}
+          renderItem={({ item }) => <Tweet tweet={item} />}
+        />
       </View>
     );
   }
